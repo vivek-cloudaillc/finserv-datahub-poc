@@ -10,7 +10,19 @@ export interface ToastMsg {
 
 export type ScreenParams = Record<string, unknown>;
 
+export interface SignedInUser {
+  name: string;
+  title: string;
+  initials: string;
+  role: Role;
+  email: string;
+}
+
 interface AppState {
+  signedInUser: SignedInUser | null;
+  isAuthenticated: boolean;
+  signIn: (u: SignedInUser) => void;
+  signOut: () => void;
   screen: ScreenKey;
   screenParams: ScreenParams;
   setScreen: (s: ScreenKey, params?: ScreenParams) => void;
@@ -42,6 +54,7 @@ interface AppState {
 const AppContext = createContext<AppState | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [signedInUser, setSignedInUser] = useState<SignedInUser | null>(null);
   const [screen, _setScreen] = useState<ScreenKey>('home');
   const [screenParams, setScreenParams] = useState<ScreenParams>({});
   const setScreen = useCallback((s: ScreenKey, params: ScreenParams = {}) => {
@@ -54,6 +67,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return p;
   }, [screenParams]);
   const [role, setRole] = useState<Role>('Analyst');
+  const signIn = useCallback((u: SignedInUser) => {
+    setSignedInUser(u);
+    setRole(u.role);
+  }, []);
+  const signOut = useCallback(() => {
+    setSignedInUser(null);
+  }, []);
   const [subSector, setSubSector] = useState<SubSector>('All');
   const [theme, setTheme] = useState<Theme>('light');
   const [density, setDensity] = useState<Density>('Comfortable');
@@ -102,6 +122,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AppState>(
     () => ({
+      signedInUser,
+      isAuthenticated: signedInUser !== null,
+      signIn,
+      signOut,
       screen,
       screenParams,
       setScreen,
@@ -129,6 +153,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addUserPipeline,
     }),
     [
+      signedInUser,
+      signIn,
+      signOut,
       screen,
       screenParams,
       setScreen,

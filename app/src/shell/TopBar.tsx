@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bell, ChevronDown, Moon, Search, Sun } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, Moon, Search, Sun } from 'lucide-react';
 import { useApp } from '../AppContext';
 import type { Density, Role, SubSector } from '../types';
 
@@ -19,6 +19,8 @@ export function TopBar() {
     tenant,
     setPaletteOpen,
     setNotificationsOpen,
+    signedInUser,
+    signOut,
   } = useApp();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -137,19 +139,37 @@ export function TopBar() {
           aria-label="User menu"
         >
           <div className="w-7 h-7 bg-accent dark:bg-accent-dark rounded-full flex items-center justify-center text-white text-xs font-semibold">
-            KK
+            {signedInUser?.initials ?? 'DH'}
           </div>
           <ChevronDown size={14} className="text-ink-dim" />
         </button>
         {userMenuOpen && (
           <div className="absolute right-0 mt-1 w-60 card overflow-hidden z-50">
             <div className="px-3 py-3 border-b border-line-light/70 dark:border-line-dark/70">
-              <div className="text-sm font-medium">Data Hub user</div>
+              <div className="text-sm font-medium truncate">
+                {signedInUser?.name ?? 'Data Hub user'}
+              </div>
+              {signedInUser?.title && (
+                <div className="text-[11px] text-ink-dim mt-0.5 truncate">
+                  {signedInUser.title}
+                </div>
+              )}
               <div className="text-[10px] text-ink-dim mt-1">Role · {role}</div>
             </div>
-            <div className="px-3 py-2 text-[11px] text-ink-dim">
+            <div className="px-3 py-2 text-[11px] text-ink-dim border-b border-line-light/70 dark:border-line-dark/70">
               Tenant · {tenant}
             </div>
+            <button
+              type="button"
+              onClick={() => {
+                setUserMenuOpen(false);
+                signOut();
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-ink-light dark:text-ink-dark hover:bg-canvas-light dark:hover:bg-white/5"
+            >
+              <LogOut size={14} className="text-ink-dim" />
+              Sign out
+            </button>
           </div>
         )}
       </div>

@@ -30,6 +30,7 @@ import { Compliance } from './pages/Compliance';
 import { ModelGovernance } from './pages/ModelGovernance';
 import { Dora } from './pages/Dora';
 import { Admin } from './pages/Admin';
+import { Login } from './pages/Login';
 
 import type { ScreenKey } from './types';
 
@@ -85,10 +86,15 @@ function Shell() {
   );
 }
 
+function Root() {
+  const { isAuthenticated } = useApp();
+  return isAuthenticated ? <Shell /> : <Login />;
+}
+
 export default function App() {
   return (
     <AppProvider>
-      <Shell />
+      <Root />
     </AppProvider>
   );
 }
