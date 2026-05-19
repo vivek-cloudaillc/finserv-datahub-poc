@@ -1,6 +1,7 @@
 # Ignored files/folders
 kk.io
 docs/
+spec_prompt.md
 
 # Dependencies
 node_modules/
