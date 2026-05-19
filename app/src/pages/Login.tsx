@@ -104,7 +104,7 @@ export function Login() {
 
         <div className="max-w-lg mt-12 lg:mt-0">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight text-white">
-            Unified FinTech
+            Unified FinServ
             <br />
             Data Hub
           </h1>
